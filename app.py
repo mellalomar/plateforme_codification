@@ -25,10 +25,10 @@ def normaliser_categories(df):
 def creer_id_base(df):
     """Crée l'ID de base: Catégorie + Age + Origine + Race"""
     df['ID_CONDITION'] = (
-        df['Catégorie'].astype(str) + 
-        df['Age'].astype(str) + 
-        df['Origine'].astype(str) + 
-        df['Race'].astype(str)
+        df['Catégorie'].fillna('').astype(str) + 
+        df['Age'].fillna('').astype(str) + 
+        df['Origine'].fillna('').astype(str) + 
+        df['Race'].fillna('').astype(str)
     )
     return df
 
