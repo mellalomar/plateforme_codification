@@ -22,40 +22,13 @@ def normaliser_categories(df):
     df.loc[df['Catégorie'] == 'CH', 'Catégorie'] = 'C'
     return df
 
-def nettoyer_donnees(df):
-    """Nettoie et valide les données pour éviter les erreurs de type"""
-    df = df.copy()
-    
-    # Colonnes critiques
-    colonnes_critiques = ['Catégorie', 'Age', 'Origine', 'Race', 'Sous catégorie', 'Remarque']
-    
-    for col in colonnes_critiques:
-        if col in df.columns:
-            # Remplacer NaN par des valeurs par défaut
-            if col == 'Catégorie':
-                df[col] = df[col].fillna('X')
-            elif col == 'Age':
-                df[col] = df[col].fillna(0)
-            elif col == 'Origine':
-                df[col] = df[col].fillna(0)
-            elif col == 'Race':
-                df[col] = df[col].fillna('X')
-            elif col in ['Sous catégorie', 'Remarque']:
-                df[col] = df[col].fillna('')
-            
-            # Convertir en string et trimmer les espaces
-            df[col] = df[col].astype(str).str.strip()
-    
-    return df
-
 def creer_id_base(df):
     """Crée l'ID de base: Catégorie + Age + Origine + Race"""
-    # S'assurer que les colonnes existent et sont nettoyées
     df['ID_CONDITION'] = (
-        df['Catégorie'].astype(str).str.strip() + 
-        df['Age'].astype(str).str.strip() + 
-        df['Origine'].astype(str).str.strip() + 
-        df['Race'].astype(str).str.strip()
+        df['Catégorie'].astype(str) + 
+        df['Age'].astype(str) + 
+        df['Origine'].astype(str) + 
+        df['Race'].astype(str)
     )
     return df
 
@@ -218,9 +191,6 @@ def ajouter_categorie_course(df):
 
 def traiter_codification(df):
     """Traite la codification complète"""
-    # Nettoyer d'abord les données
-    df = nettoyer_donnees(df)
-    
     # Normaliser
     df = normaliser_categories(df)
     
@@ -389,8 +359,6 @@ if uploaded_file is not None:
         # Lire le fichier principal
         with st.spinner("📖 Lecture du fichier programme..."):
             df = pd.read_excel(uploaded_file)
-            # Nettoyer immédiatement après le chargement
-            df = nettoyer_donnees(df)
         
         st.success(f"✅ Fichier programme chargé ({len(df)} lignes)")
         
